@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 
-export default function Item(props) {
-  const [total, setTotal] = useState(0);
+export type ItemType = {
+  info: {
+    name: string,
+    desc: string,
+    id: string
+  }
+}
+
+const Item: React.FC <ItemType> = (props) => {
+  const [total, setTotal] = useState(1);
 
   const { info } = props;
 
@@ -28,7 +36,7 @@ export default function Item(props) {
       <div className="item-quantity">
         <button
           className="item-button"
-          disabled={total === 0}
+          disabled={total === 1}
           onClick={handleRemoveClick}
         >
           -
@@ -41,3 +49,5 @@ export default function Item(props) {
     </div>
   );
 }
+
+export default Item
