@@ -1,14 +1,16 @@
-import React, { FC, useState } from "react";
-import Item, { ItemType } from "./Item";
+import React, { FC, useState, FormEventHandler } from "react";
+import { ItemType } from "./Item";
 import { v4 as uuidv4 } from "uuid"
+import AddItem from "./AddItem";
+import ItemList from "./ItemList";
 
 const Shop: FC = () => {
 
   const [items, setItems] = useState<Array<ItemType["info"]>>([])
-  const [name, setName] = useState<string>('')
-  const [desc, setDesc] = useState<string>('')
+  const [name, setName] = useState<ItemType["info"]["name"]>('')
+  const [desc, setDesc] = useState<ItemType["info"]["desc"]>('')
 
-  const handleAddItem = (e: React.FormEvent) => {
+  const handleAddItem: FormEventHandler<HTMLFormElement> = (e: React.FormEvent) => {
     e.preventDefault()
     if (name === '' || desc === '') {
       alert("Заполните все поля!")
@@ -17,58 +19,25 @@ const Shop: FC = () => {
       setName('')
       setDesc('')
     }
-
   }
 
-  const handleDeleteItem = (item: ItemType["info"]) => {
+  const handleDeleteItem = (id: string) => {
     setItems([...items].filter(el => {
-      return el.id !== item.id
+      return el.id !== id
     }))
   }
 
   return (
     <>
-      <form onSubmit={handleAddItem}>
-        <div>
-          <input
-            type="text"
-            placeholder="Название товара"
-            className="ui-textfield"
-            value={name}
-            onChange={e => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            placeholder="Описание товара"
-            className="ui-textfield"
-            value={desc}
-            onChange={e => setDesc(e.target.value)}
-          />
-        </div>
-        <div className="form-footer">
-          <div className="validation"></div>
-          <input type="submit" className="ui-button" value="Добавить" />
-        </div>
-      </form>
-      
+      <AddItem name={name} desc={desc} handleAddItem={handleAddItem} setName={setName} setDesc={setDesc}/>
+
       {items.length < 1 ? (
         <div>
           <p className="ui-title">Добавьте первый товар</p>
         </div>
       ) : null}
-
-      <ul className="ui-list">
-        {items.map((el) => {
-          return (
-            <li className="ui-item-list" key={el.id}>
-              <Item info={el} />
-              <button className="item-button" onClick={() => handleDeleteItem(el)}>Удалить</button>
-            </li>
-          )
-        })}
-      </ul>
+      
+      <ItemList items={items} handleDeleteItem={handleDeleteItem}/>
     </>
   );
 }

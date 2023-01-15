@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEventHandler, useState } from "react";
 
 export type ItemType = {
   info: {
@@ -9,8 +9,8 @@ export type ItemType = {
 }
 
 const Item: React.FC <ItemType> = (props) => {
+  
   const [total, setTotal] = useState(1);
-
   const { info } = props;
 
   function handleAddClick() {
